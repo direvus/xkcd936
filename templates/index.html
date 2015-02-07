@@ -1,0 +1,52 @@
+$def with (words, length, count, propers)
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>xkcd936 password generator</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="page-header">
+                <h1>Password generation in the style of <a href="http://xkcd.com/936">xkcd 936</a></h1>
+            </div>
+            <p class="lead text-center well">
+            $for word in words:
+                $word 
+            </p>
+            <p class="text-center">Selected $count words from among $length.</p>
+            <p class="text-center"><a href="" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-repeat"></span> Again!</a></p>
+
+            <h2>Options</h2>
+            <form method="get" action="">
+                <table class="table" style="width: 60%;">
+                    <thead>
+                        <tr>
+                            <th><label class="control-label" for="input_count">Number of words</label></th>
+                            <th><label class="control-label" for="input_propers">Include proper nouns</label></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input class="form-control" id="input_count" type="number" min="1" max="10" name="count" value="$count"></td>
+                            <td><input class="form-control" id="input_propers" type="checkbox" name="propers" value="true"
+                                $if propers == 'true':
+                                    checked
+                                    >
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-primary" name="submit"><span class="glyphicon glyphicon-ok"></span> Update</button>
+                                <a class="btn btn-default" href="?"><span class="glyphicon glyphicon-remove"></span> Reset</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    </body>
+</html>
