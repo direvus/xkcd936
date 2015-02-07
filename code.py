@@ -7,26 +7,31 @@ import random
 
 DEFAULT_COUNT = 4
 WORDSFILE = '/usr/share/dict/words'
+TEMPLATE_DIR = 'templates/'
+
+
 with open(WORDSFILE, 'r') as fp:
     wordlist = [line.strip() for line in fp]
 
 
-prefix = '/xkcd936/'
+prefix = '/xkcd936'
 urls = (
-        prefix, 'index'
+        '/', 'index',
+        prefix, 'index',
+        prefix + '/', 'index',
         )
 
-render = web.template.render('templates/')
+render = web.template.render(TEMPLATE_DIR)
 
 
 class index(object):
     def GET(self):
         words = wordlist
-        inputs = web.input(count=4, propers='false')
+        inputs = web.input(count=DEFAULT_COUNT, propers='false')
         try:
             count = int(inputs.count)
         except ValueError:
-            count = 4
+            count = DEFAULT_COUNT
         if inputs.propers != 'true':
             words = [x for x in wordlist if x[0].islower()]
         sample = random.sample(words, count)
