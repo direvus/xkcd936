@@ -1,4 +1,4 @@
-$def with (words, length, base, exponent, magnitude, count, propers, maxlength)
+$def with (words, length, base, exponent, magnitude, count, guess, propers, maxlength)
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -19,6 +19,31 @@ $def with (words, length, base, exponent, magnitude, count, propers, maxlength)
             </p>
             <p class="text-center">Selected <strong>$count</strong> words from among <strong>$length</strong>.</p>
             <p class="text-center">These settings yield <strong>$base &times; 10<sup>$exponent</sup></strong> ($magnitude) possible passwords.</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Attack type<a href="#fn_attacktype">*</a></th>
+                        <th>Symbol space</th>
+                        <th>Symbols</th>
+                        <th>Entropy</th>
+                        <th>Time to crack <div class="small">(1k guesses per second)</div></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    $for type, space, symbols, entropy, time in guess:
+                    <tr>
+                        <td>$type</td>
+                        <td>$space</td>
+                        <td>$symbols</td>
+                        <td>2<sup>$entropy</sup></td>
+                        <td>$time</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="small">
+                <a name="fn_attacktype"></a>
+                * The &ldquo;known algorithm&rdquo; attack assumes all details of the algorithm are known, including the word list and the number of words.  The &ldquo;all symbols&rdquo; attack assumes nothing is known, and the attacker is using brute force with all letters, numbers and symbols.
+            </p>
             <p class="text-center"><a href="" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-repeat"></span> Again!</a></p>
 
             <h2>Options</h2>

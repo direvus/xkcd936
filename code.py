@@ -3,9 +3,19 @@
 
 import web
 import random
+from math import log, floor
+from decimal import Decimal
 
 
 DEFAULT_COUNT = 4
+GUESSES = 1000
+SYMBOLS = 94
+
+MIN_SECS = 60
+HOUR_SECS = MIN_SECS * 60
+DAY_SECS = HOUR_SECS * 24
+YEAR_SECS = Decimal(DAY_SECS * 365.25)
+
 WORDSFILE = '/usr/share/dict/words'
 TEMPLATE_DIR = 'templates/'
 EXPONENT_NAMES = (
@@ -89,6 +99,34 @@ urls = (
 render = web.template.render(TEMPLATE_DIR)
 
 
+def describe_magnitude(exponent):
+    if exponent >= len(EXPONENT_NAMES):
+        return 'an absurdly large number'
+    else:
+        return EXPONENT_NAMES[exponent]
+
+
+def describe_time(seconds):
+    seconds = Decimal(seconds)
+    if seconds >= YEAR_SECS:
+        years = seconds / YEAR_SECS
+        if years > 1000:
+            return '{} of years'.format(describe_magnitude(years.adjusted()))
+        else:
+            return '{} years'.format(seconds / YEAR_SECS)
+    if seconds >= DAY_SECS:
+        return '{} days'.format(seconds / DAY_SECS)
+    if seconds >= HOUR_SECS:
+        return '{} hours'.format(seconds / HOUR_SECS)
+    if seconds >= MIN_SECS:
+        return '{} minutes'.format(seconds / MIN_SECS)
+    return '{} seconds'.format(seconds)
+
+
+def entropy_bits(total_entropy):
+    return int(floor(log(total_entropy, 2)))
+
+
 class index(object):
     def GET(self):
         words = wordlist
@@ -115,22 +153,42 @@ class index(object):
         if maxlength > 0:
             words = [x for x in wordlist if len(x) <= maxlength]
 
-        possible = len(words) ** count
+        space = len(words)
+        possible = space ** count
         base, exponent = '{:.2e}'.format(possible).split('e+', 1)
         exponent = int(exponent)
-        if exponent >= len(EXPONENT_NAMES):
-            magnitude = 'an absurdly large number'
-        else:
-            magnitude = EXPONENT_NAMES[exponent]
+        magnitude = describe_magnitude(exponent)
 
         sample = random.sample(words, count)
+
+        guesses = []
+        algentropy = possible
+        algguess = describe_time(algentropy / GUESSES)
+        guesses.append((
+            'Known algorithm',
+            space,
+            count,
+            entropy_bits(algentropy),
+            algguess))
+
+        symlen = sum([len(x) for x in sample]) + (len(sample) - 1)
+        symentropy = SYMBOLS ** symlen
+        symguess = describe_time(symentropy / GUESSES)
+        guesses.append((
+            'All symbols',
+            SYMBOLS,
+            symlen,
+            entropy_bits(symentropy),
+            symguess))
+
         return render.index(
                 sample,
-                len(words),
+                space,
                 base,
                 exponent,
                 magnitude,
                 count,
+                guesses,
                 inputs.propers,
                 maxlength,
                 )
