@@ -154,10 +154,10 @@ class index(object):
             maxlength = None
 
         if inputs.propers != 'true':
-            words = [x for x in wordlist if x[0].islower()]
+            words = [x for x in words if x[0].islower()]
 
         if maxlength > 0:
-            words = [x for x in wordlist if len(x) <= maxlength]
+            words = [x for x in words if len(x) <= maxlength]
 
         space = len(words)
         possible = space ** count
