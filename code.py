@@ -106,6 +106,12 @@ def describe_magnitude(exponent):
         return EXPONENT_NAMES[exponent]
 
 
+def describe_count(number, unit):
+    number = int(round(number))
+    if number > 1:
+        unit = unit + 's'
+    return '{} {}'.format(number, unit)
+
 def describe_time(seconds):
     seconds = Decimal(seconds)
     if seconds >= YEAR_SECS:
@@ -113,14 +119,14 @@ def describe_time(seconds):
         if years > 1000:
             return '{} of years'.format(describe_magnitude(years.adjusted()))
         else:
-            return '{} years'.format(seconds / YEAR_SECS)
+            return describe_count(seconds / YEAR_SECS, 'year')
     if seconds >= DAY_SECS:
-        return '{} days'.format(seconds / DAY_SECS)
+        return describe_count(seconds / DAY_SECS, 'day')
     if seconds >= HOUR_SECS:
-        return '{} hours'.format(seconds / HOUR_SECS)
+        return describe_count(seconds / HOUR_SECS, 'hour')
     if seconds >= MIN_SECS:
-        return '{} minutes'.format(seconds / MIN_SECS)
-    return '{} seconds'.format(seconds)
+        return describe_count(seconds / MIN_SECS, 'minute')
+    return describe_count(seconds, 'second')
 
 
 def entropy_bits(total_entropy):
@@ -161,25 +167,34 @@ class index(object):
 
         sample = random.sample(words, count)
 
-        guesses = []
+        attacks = []
         algentropy = possible
         algguess = describe_time(algentropy / GUESSES)
-        guesses.append((
+        attacks.append((
             'Known algorithm',
             space,
             count,
             entropy_bits(algentropy),
-            algguess))
+            algguess,
+            '1',
+            'Assumes the attacker knows the exact algorithm used to '
+            'generate the password, including the wordlist and the number of '
+            'words used.',
+            ))
 
         symlen = sum([len(x) for x in sample]) + (len(sample) - 1)
         symentropy = SYMBOLS ** symlen
         symguess = describe_time(symentropy / GUESSES)
-        guesses.append((
+        attacks.append((
             'All symbols',
             SYMBOLS,
             symlen,
             entropy_bits(symentropy),
-            symguess))
+            symguess,
+            '2',
+            'Assumes the attacker knows nothing about the password, and is '
+            'trying all combinations of letters, numbers and symbols.'
+            ))
 
         return render.index(
                 sample,
@@ -188,7 +203,7 @@ class index(object):
                 exponent,
                 magnitude,
                 count,
-                guesses,
+                attacks,
                 inputs.propers,
                 maxlength,
                 )
