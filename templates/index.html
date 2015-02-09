@@ -1,4 +1,4 @@
-$def with (words, length, count, propers)
+$def with (words, length, count, propers, maxlength)
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -27,7 +27,7 @@ $def with (words, length, count, propers)
                         <tr>
                             <th><label class="control-label" for="input_count">Number of words</label></th>
                             <th><label class="control-label" for="input_propers">Include proper nouns</label></th>
-                            <th></th>
+                            <th><label class="control-label" for="input_maxlength">Maximum word length</label></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,13 +38,14 @@ $def with (words, length, count, propers)
                                     checked
                                     >
                             </td>
-                            <td>
-                                <button type="submit" class="btn btn-primary" name="submit"><span class="glyphicon glyphicon-ok"></span> Update</button>
-                                <a class="btn btn-default" href="?"><span class="glyphicon glyphicon-remove"></span> Reset</a>
-                            </td>
+                            <td><input class="form-control" id="input_maxlength" type="number" min="4" name="maxlength" value="$maxlength"></td>
                         </tr>
                     </tbody>
                 </table>
+                <p>
+                    <button type="submit" class="btn btn-primary" name="submit"><span class="glyphicon glyphicon-ok"></span> Update</button>
+                    <a class="btn btn-default" href="?"><span class="glyphicon glyphicon-remove"></span> Reset</a>
+                </p>
             </form>
         </div>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>

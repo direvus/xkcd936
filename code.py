@@ -27,15 +27,37 @@ render = web.template.render(TEMPLATE_DIR)
 class index(object):
     def GET(self):
         words = wordlist
-        inputs = web.input(count=DEFAULT_COUNT, propers='false')
+        inputs = web.input(
+                count=DEFAULT_COUNT,
+                propers='false',
+                maxlength=None,
+                )
         try:
             count = int(inputs.count)
-        except ValueError:
+        except TypeError:
             count = DEFAULT_COUNT
+        try:
+            maxlength = int(inputs.maxlength)
+        except TypeError:
+            maxlength = None
+
+        if maxlength <= 0:
+            maxlength = None
+
         if inputs.propers != 'true':
             words = [x for x in wordlist if x[0].islower()]
+
+        if maxlength > 0:
+            words = [x for x in wordlist if len(x) <= maxlength]
+
         sample = random.sample(words, count)
-        return render.index(sample, len(words), count, inputs.propers)
+        return render.index(
+                sample,
+                len(words),
+                count,
+                inputs.propers,
+                maxlength,
+                )
 
 
 app = web.application(urls, globals(), autoreload=False)
