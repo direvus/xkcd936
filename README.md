@@ -29,3 +29,7 @@ compatible, or close to.
 
 There is an instance of this app available for general use at
 https://swords.id.au/xkcd936/
+
+## License
+
+xkcd936 is licensed under the "MIT License".
