@@ -2,8 +2,9 @@ $def with (words, length, base, exponent, magnitude, count, attacks, propers, ma
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf8">
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="Author" content="Brendan Jurd">
         <title>xkcd936 password generator</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
@@ -64,13 +65,12 @@ $def with (words, length, base, exponent, magnitude, count, attacks, propers, ma
                 </tbody>
             </table>
             $for type, space, symbols, entropy, time, marker, footnote in attacks:
-                <p class="small">
-                    <a name="fn$marker"></a>
+                <p class="small" id="fn$marker">
                     <strong>$marker</strong>    $footnote
                 </p>
 
             <h2>Options</h2>
-            <form method="get" action="">
+            <form method="get">
                 <table class="table" style="width: 60%;">
                     <thead>
                         <tr>
@@ -85,7 +85,7 @@ $def with (words, length, base, exponent, magnitude, count, attacks, propers, ma
                             <td><input class="form-control" id="input_propers" type="checkbox" name="propers" value="true"
                                 $if propers == 'true':
                                     checked
-                                    >
+                                >
                             </td>
                             <td><input class="form-control" id="input_maxlength" type="number" min="4" name="maxlength" value="$maxlength"></td>
                         </tr>
