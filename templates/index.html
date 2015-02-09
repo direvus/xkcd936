@@ -1,4 +1,4 @@
-$def with (words, length, count, propers, maxlength)
+$def with (words, length, base, exponent, magnitude, count, propers, maxlength)
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -17,7 +17,8 @@ $def with (words, length, count, propers, maxlength)
             $for word in words:
                 $word 
             </p>
-            <p class="text-center">Selected $count words from among $length.</p>
+            <p class="text-center">Selected <strong>$count</strong> words from among <strong>$length</strong>.</p>
+            <p class="text-center">These settings yield <strong>$base &times; 10<sup>$exponent</sup></strong> ($magnitude) possible passwords.</p>
             <p class="text-center"><a href="" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-repeat"></span> Again!</a></p>
 
             <h2>Options</h2>
