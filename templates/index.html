@@ -7,6 +7,25 @@ $def with (words, length, base, exponent, magnitude, count, attacks, propers, ma
         <title>xkcd936 password generator</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+        <style type="text/css">
+            html {
+                position: relative;
+                min-height: 100%;
+            }
+            body {
+                margin-bottom: 60px;
+            }
+            .footer {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                height: 60px;
+                background-color: #f5f5f5;
+            }
+            .footer p {
+                margin-top: 15px;
+            }
+        </style>
     </head>
     <body>
         <div class="container">
@@ -79,5 +98,10 @@ $def with (words, length, base, exponent, magnitude, count, attacks, propers, ma
             </form>
         </div>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; Brendan Jurd  &middot;  <a href="https://github.com/direvus/xkcd936">GitHub</a></p>
+            </div>
+        </footer>
     </body>
 </html>
