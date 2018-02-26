@@ -1,4 +1,3 @@
-$def with (words, length, base, exponent, magnitude, count, attacks, propers, maxlength)
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -14,13 +13,14 @@ $def with (words, length, base, exponent, magnitude, count, attacks, propers, ma
                 <h1>Password generation in the style of <a href="http://xkcd.com/936">xkcd 936</a></h1>
             </div>
             <p class="lead text-center well">
-            $for word in words:
-                $word 
+            {% for word in words %}
+                {{ word }}
+            {% endfor %}
             </p>
             <p class="text-center"><a href="" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-repeat"></span> Again!</a></p>
 
-            <p class="text-center">Selected <strong>$count</strong> words from among <strong>$length</strong>.</p>
-            <p class="text-center">These settings yield <strong>$base &times; 10<sup>$exponent</sup></strong> ($magnitude) possible passwords.</p>
+            <p class="text-center">Selected <strong>{{ count }}</strong> words from among <strong>{{ space }}</strong>.</p>
+            <p class="text-center">These settings yield <strong>{{ base }} &times; 10<sup>{{ exponent }}</sup></strong> ({{ magnitude }}) possible passwords.</p>
 
             <h2>Cracking estimates</h2>
             <table class="table">
@@ -34,21 +34,23 @@ $def with (words, length, base, exponent, magnitude, count, attacks, propers, ma
                     </tr>
                 </thead>
                 <tbody>
-                $for type, space, symbols, entropy, time, marker, footnote in attacks:
+                {% for type, space, symbols, entropy, time, marker, footnote in attacks %}
                     <tr>
-                        <td>$type<a href="#fn$marker"><sup>$marker</sup></a></td>
-                        <td>$space</td>
-                        <td>$symbols</td>
-                        <td>2<sup>$entropy</sup></td>
-                        <td>$time</td>
+                        <td>{{ type }}<a href="#fn{{ marker }}"><sup>{{ marker }}</sup></a></td>
+                        <td>{{ space }}</td>
+                        <td>{{ symbols }}</td>
+                        <td>2<sup>{{ entropy }}</sup></td>
+                        <td>{{ time }}</td>
                     </tr>
+                {% endfor %}
                 </tbody>
             </table>
-            $for type, space, symbols, entropy, time, marker, footnote in attacks:
+            {% for type, space, symbols, entropy, time, marker, footnote in attacks %}
                 <p class="small">
-                    <a name="fn$marker"></a>
-                    <strong>$marker</strong>    $footnote
+                    <a name="fn{{ marker }}"></a>
+                    <strong>{{ marker }}</strong>    {{ footnote }}
                 </p>
+            {% endfor %}
 
             <h2>Options</h2>
             <form method="get" action="">
@@ -62,13 +64,10 @@ $def with (words, length, base, exponent, magnitude, count, attacks, propers, ma
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input class="form-control" id="input_count" type="number" min="1" max="10" name="count" value="$count"></td>
-                            <td><input class="form-control" id="input_propers" type="checkbox" name="propers" value="true"
-                                $if propers == 'true':
-                                    checked
-                                    >
+                            <td><input class="form-control" id="input_count" type="number" min="1" max="10" name="count" value="{{ count }}"></td>
+                            <td><input class="form-control" id="input_propers" type="checkbox" name="propers" value="true" {% if propers == 'true' %} checked{% endif %}>
                             </td>
-                            <td><input class="form-control" id="input_maxlength" type="number" min="4" name="maxlength" value="$maxlength"></td>
+                            <td><input class="form-control" id="input_maxlength" type="number" min="4" name="maxlength" value="{{ maxlength }}"></td>
                         </tr>
                     </tbody>
                 </table>

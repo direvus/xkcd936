@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 
-import web
 import random
+from flask import Flask, request, render_template
 from math import log, floor
 from decimal import Decimal
 
@@ -90,13 +90,12 @@ with open(WORDSFILE, 'r') as fp:
 
 
 prefix = '/xkcd936'
+app = Flask(__name__)
 urls = (
         '/', 'index',
         prefix, 'index',
         prefix + '/', 'index',
         )
-
-render = web.template.render(TEMPLATE_DIR)
 
 
 def describe_magnitude(exponent):
@@ -111,6 +110,7 @@ def describe_count(number, unit):
     if number > 1:
         unit = unit + 's'
     return '{} {}'.format(number, unit)
+
 
 def describe_time(seconds):
     seconds = Decimal(seconds)
@@ -133,85 +133,77 @@ def entropy_bits(total_entropy):
     return int(floor(log(total_entropy, 2)))
 
 
-class index(object):
-    def GET(self):
-        words = wordlist
-        inputs = web.input(
-                count=DEFAULT_COUNT,
-                propers='false',
-                maxlength=None,
-                )
-        try:
-            count = int(inputs.count)
-        except:
-            count = DEFAULT_COUNT
-        try:
-            maxlength = int(inputs.maxlength)
-        except:
-            maxlength = None
+@app.route('/')
+def index():
+    words = wordlist
+    count = request.args.get('count', DEFAULT_COUNT)
+    propers = request.args.get('propers', 'false')
+    maxlength = request.args.get('maxlength', '')
 
-        if maxlength <= 0:
-            maxlength = None
+    try:
+        count = int(count)
+    except:
+        count = DEFAULT_COUNT
 
-        if inputs.propers != 'true':
-            words = [x for x in words if x[0].islower()]
+    try:
+        maxlength = int(maxlength)
+    except:
+        maxlength = None
 
-        if maxlength > 0:
-            words = [x for x in words if len(x) <= maxlength]
+    if propers != 'true':
+        words = [x for x in words if x[0].islower()]
 
-        space = len(words)
-        possible = space ** count
-        base, exponent = '{:.2e}'.format(possible).split('e+', 1)
-        exponent = int(exponent)
-        magnitude = describe_magnitude(exponent)
+    if maxlength is not None and maxlength <= 0:
+        maxlength = None
 
-        sample = random.sample(words, count)
+    if maxlength is not None and maxlength > 0:
+        words = [x for x in words if len(x) <= maxlength]
 
-        attacks = []
-        algentropy = possible
-        algguess = describe_time(algentropy / GUESSES)
-        attacks.append((
-            'Known algorithm',
-            space,
-            count,
-            entropy_bits(algentropy),
-            algguess,
-            '1',
-            'Assumes the attacker knows the exact algorithm used to '
-            'generate the password, including the wordlist and the number of '
-            'words used.',
-            ))
+    space = len(words)
+    possible = space ** count
+    base, exponent = '{:.2e}'.format(possible).split('e+', 1)
+    exponent = int(exponent)
+    magnitude = describe_magnitude(exponent)
 
-        symlen = sum([len(x) for x in sample]) + (len(sample) - 1)
-        symentropy = SYMBOLS ** symlen
-        symguess = describe_time(symentropy / GUESSES)
-        attacks.append((
-            'All symbols',
-            SYMBOLS,
-            symlen,
-            entropy_bits(symentropy),
-            symguess,
-            '2',
-            'Assumes the attacker knows nothing about the password, and is '
-            'trying all combinations of letters, numbers and symbols.'
-            ))
+    sample = random.sample(words, count)
 
-        return render.index(
-                sample,
-                space,
-                base,
-                exponent,
-                magnitude,
-                count,
-                attacks,
-                inputs.propers,
-                maxlength,
-                )
+    attacks = []
+    algentropy = possible
+    algguess = describe_time(algentropy / GUESSES)
+    attacks.append((
+        'Known algorithm',
+        space,
+        count,
+        entropy_bits(algentropy),
+        algguess,
+        '1',
+        'Assumes the attacker knows the exact algorithm used to '
+        'generate the password, including the wordlist and the number of '
+        'words used.',
+        ))
 
+    symlen = sum([len(x) for x in sample]) + (len(sample) - 1)
+    symentropy = SYMBOLS ** symlen
+    symguess = describe_time(symentropy / GUESSES)
+    attacks.append((
+        'All symbols',
+        SYMBOLS,
+        symlen,
+        entropy_bits(symentropy),
+        symguess,
+        '2',
+        'Assumes the attacker knows nothing about the password, and is '
+        'trying all combinations of letters, numbers and symbols.'
+        ))
 
-app = web.application(urls, globals(), autoreload=False)
-application = app.wsgifunc()
-
-
-if __name__ == '__main__':
-    app.run()
+    return render_template('index.html',
+            words=sample,
+            space=space,
+            base=base,
+            exponent=exponent,
+            magnitude=magnitude,
+            count=count,
+            attacks=attacks,
+            propers=propers,
+            maxlength=maxlength,
+            )
