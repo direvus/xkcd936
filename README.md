@@ -1,7 +1,7 @@
 # xkcd936
-A small web.py webapp to generate passwords in the style of xkcd 936 ("correct horse battery staple")
+A small Flask webapp to generate passwords in the style of xkcd 936 ("correct horse battery staple")
 
-xkcd936 uses [web.py](http://webpy.org) and the "words" dictionary from
+xkcd936 uses [Flask](http://flask.pocoo.org/) and the "words" dictionary from
 [GNU miscfiles](http://savannah.gnu.org/projects/miscfiles/) to create a
 very simple single-page webapp to generate passwords of the kind suggested
 by [xkcd 936](http://xkcd.com/936).
@@ -16,8 +16,8 @@ about the difficulty of cracking such a password.
 
 ## Installation
 
-Install the web.py Python package, and deploy onto a webserver however you
-like.
+`pip install Flask`, and then run the app locally with `FLASK_APP=code.py flask
+run`, or deploy onto a webserver however you like.
 
 The page uses [Bootstrap](http://getbootstrap.com/) for its UI, but you don't
 need to install anything, it links to the Bootstrap CDN.
